@@ -17,10 +17,15 @@ import net.minecraft.client.options.AttackIndicator;
 import net.minecraft.client.options.GraphicsMode;
 import net.minecraft.client.options.Option;
 import net.minecraft.client.options.ParticlesMode;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.Monitor;
+import net.minecraft.client.util.VideoMode;
 import net.minecraft.client.util.Window;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class SodiumGameOptionPages {
     private static final SodiumOptionsStorage sodiumOpts = new SodiumOptionsStorage();
@@ -94,6 +99,38 @@ public class SodiumGameOptionPages {
                             }
                         }, (opts) -> opts.fullscreen)
                         .build())
+                .add(OptionImpl.createBuilder(int.class, vanillaOpts)
+                        .setName("Resolution")
+                        .setTooltip("Sets the resolution the game will run at when in full-screen")
+                        .setControl(option -> {
+                            Monitor monitor = MinecraftClient.getInstance().getWindow().getMonitor();
+                            return new SliderControl(option, -1, monitor == null ? -1 : monitor.getVideoModeCount() - 1, 1,
+                                    value -> monitor == null ? I18n.translate("options.fullscreen.unavailable") :
+                                            value == -1 ? I18n.translate("options.fullscreen.current") :
+                                                    monitor.getVideoMode(value).toString());
+                        })
+                        .setBinding((opts, value) -> {
+                            Window window = MinecraftClient.getInstance().getWindow();
+                            Monitor monitor = window.getMonitor();
+                            if(monitor != null) {
+                                // reasoning for if value is -1 then 0 else value: Some DEs do *not* take kindly to a reset.
+                                // This is also taking an assumption that both the user drives the display to the max it can go normally,
+                                // and the GPU can take it.
+                                VideoMode mode = monitor.getVideoMode(value == -1 ? 0 : value);
+                                opts.fullscreenResolution = value == -1 ? null : mode.asString();
+                                if(!Objects.equals(window.getVideoMode().orElse(null), mode)) {
+                                    window.setVideoMode(Optional.ofNullable(mode));
+                                    window.applyVideoMode();
+
+                                    // Possible chance that the client cannot enter this resolution
+                                    if(!window.getVideoMode().isPresent())
+                                        opts.fullscreenResolution = null;
+                                }
+                            }
+                        }, (opts) -> {
+                            Monitor monitor = MinecraftClient.getInstance().getWindow().getMonitor();
+                            return monitor == null ? -1 : VideoMode.fromString(opts.fullscreenResolution).map(monitor::findClosestVideoModeIndex).orElse(-1);
+                        }).build())
                 .add(OptionImpl.createBuilder(boolean.class, vanillaOpts)
                         .setName("V-Sync")
                         .setTooltip("If enabled, the game's frame rate will be synchronized to the monitor's refresh rate, making for a generally smoother experience " +

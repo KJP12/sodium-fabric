@@ -32,6 +32,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.*;
 import net.minecraft.util.profiler.Profiler;
+import org.lwjgl.opengl.GL20C;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -228,7 +229,7 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
 
         pass.endDrawing();
 
-        RenderSystem.clearCurrentColor();
+        RenderSystem.clearColor(-1F, -1F, -1F, -1F);
     }
 
     public void reload() {
@@ -309,7 +310,7 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
                 if (stage >= 0) {
                     MatrixStack.Entry entry = matrices.peek();
                     VertexConsumer transformer = new OverlayVertexConsumer(bufferBuilders.getEffectVertexConsumers().getBuffer(ModelLoader.BLOCK_DESTRUCTION_RENDER_LAYERS.get(stage)), entry.getModel(), entry.getNormal());
-                    consumer = (layer) -> layer.hasCrumbling() ? VertexConsumers.dual(transformer, immediate.getBuffer(layer)) : immediate.getBuffer(layer);
+                    consumer = (layer) -> layer.hasCrumbling() ? VertexConsumers.union(transformer, immediate.getBuffer(layer)) : immediate.getBuffer(layer);
                 }
             }
 

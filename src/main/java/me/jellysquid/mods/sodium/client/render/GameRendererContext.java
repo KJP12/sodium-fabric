@@ -31,7 +31,8 @@ public class GameRendererContext {
 
         Matrix4f matrix = PROJECTION_MATRIX.copy();
         matrix.multiply(matrices.getModel());
-        matrix.writeToBuffer(bufModelViewProjection);
+        // FIXME: Is it Row or Column?
+        matrix.writeColumnMajor(bufModelViewProjection);
 
         return bufModelViewProjection;
     }

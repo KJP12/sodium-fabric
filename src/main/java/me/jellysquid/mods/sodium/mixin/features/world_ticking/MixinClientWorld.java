@@ -15,6 +15,7 @@ import net.minecraft.world.MutableWorldProperties;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeParticleConfig;
 import net.minecraft.world.dimension.DimensionType;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,7 +45,7 @@ public abstract class MixinClientWorld extends World {
      * @author JellySquid
      */
     @Overwrite
-    public void randomBlockDisplayTick(int xCenter, int yCenter, int zCenter, int radius, Random random, boolean spawnBarrierParticles, BlockPos.Mutable pos) {
+    public void randomBlockDisplayTick(int xCenter, int yCenter, int zCenter, int radius, Random random, @Nullable ClientWorld.BlockParticle blockParticle, BlockPos.Mutable pos) {
         int x = xCenter + (random.nextInt(radius) - random.nextInt(radius));
         int y = yCenter + (random.nextInt(radius) - random.nextInt(radius));
         int z = zCenter + (random.nextInt(radius) - random.nextInt(radius));
@@ -54,7 +55,7 @@ public abstract class MixinClientWorld extends World {
         BlockState blockState = this.getBlockState(pos);
 
         if (!blockState.isAir()) {
-            this.performBlockDisplayTick(blockState, pos, random, spawnBarrierParticles);
+            this.performBlockDisplayTick(blockState, pos, random, blockParticle);
         }
 
         if (!blockState.isFullCube(this, pos)) {
@@ -68,16 +69,16 @@ public abstract class MixinClientWorld extends World {
         }
     }
 
-    private void performBlockDisplayTick(BlockState blockState, BlockPos pos, Random random, boolean spawnBarrierParticles) {
+    private void performBlockDisplayTick(BlockState blockState, BlockPos pos, Random random, @Nullable ClientWorld.BlockParticle blockParticle) {
         blockState.getBlock().randomDisplayTick(blockState, this, pos, random);
 
-        if (spawnBarrierParticles && blockState.isOf(Blocks.BARRIER)) {
-            this.performBarrierDisplayTick(pos);
+        if (blockParticle != null && blockState.isOf(blockParticle.block)) {
+            this.performBarrierDisplayTick(pos, blockParticle.particle);
         }
     }
 
-    private void performBarrierDisplayTick(BlockPos pos) {
-        this.addParticle(ParticleTypes.BARRIER, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D,
+    private void performBarrierDisplayTick(BlockPos pos, ParticleEffect particle) {
+        this.addParticle(particle, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D,
                 0.0D, 0.0D, 0.0D);
     }
 

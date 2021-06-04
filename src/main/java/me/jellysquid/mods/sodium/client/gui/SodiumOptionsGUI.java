@@ -64,8 +64,7 @@ public class SodiumOptionsGUI extends Screen {
 
     private void rebuildGUI() {
         this.controls.clear();
-        this.children.clear();
-        this.drawable.clear();
+        this.clearChildren();
 
         if (this.currentPage == null) {
             if (this.pages.isEmpty()) {
@@ -83,11 +82,11 @@ public class SodiumOptionsGUI extends Screen {
         this.applyButton = new FlatButtonWidget(new Dim2i(this.width - 142, this.height - 30, 65, 20), "Apply", this::applyChanges);
         this.closeButton = new FlatButtonWidget(new Dim2i(this.width - 73, this.height - 30, 65, 20), "Close", this::onClose);
 
-        this.children.add(this.undoButton);
-        this.children.add(this.applyButton);
-        this.children.add(this.closeButton);
+        this.addDrawableChild(this.undoButton);
+        this.addDrawableChild(this.applyButton);
+        this.addDrawableChild(this.closeButton);
 
-        for (Element element : this.children) {
+        for (Element element : this.children()) {
             if (element instanceof Drawable) {
                 this.drawable.add((Drawable) element);
             }
@@ -106,7 +105,7 @@ public class SodiumOptionsGUI extends Screen {
 
             x += width + 6;
 
-            this.children.add(button);
+            this.addDrawableChild(button);
         }
     }
 
@@ -121,7 +120,7 @@ public class SodiumOptionsGUI extends Screen {
                 ControlElement<?> element = control.createElement(new Dim2i(x, y, 200, 18));
 
                 this.controls.add(element);
-                this.children.add(element);
+                this.addDrawableChild(element);
 
                 // Move down to the next option
                 y += 18;

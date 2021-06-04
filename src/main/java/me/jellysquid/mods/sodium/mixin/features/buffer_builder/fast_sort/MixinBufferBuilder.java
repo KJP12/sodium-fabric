@@ -27,12 +27,13 @@ public class MixinBufferBuilder {
     @Shadow
     private int buildStart;
 
+    // FIXME: This doesn't look to do the same stuff?
     /**
      * @reason Reduce allocations, use stack allocations, avoid unnecessary math and pointer bumping, inline comparators
      * @author JellySquid
      */
     @Overwrite
-    public void method_31948(float cameraX, float cameraY, float cameraZ) {
+    public void setCameraPosition(float cameraX, float cameraY, float cameraZ) {
         this.buffer.clear();
         FloatBuffer floatBuffer = this.buffer.asFloatBuffer();
 

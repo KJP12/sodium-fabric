@@ -9,6 +9,7 @@ import me.jellysquid.mods.sodium.client.util.color.ColorU8;
 import me.jellysquid.mods.sodium.client.util.math.MatrixUtil;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.FixedColorVertexConsumer;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix3f;
@@ -20,12 +21,19 @@ import org.spongepowered.asm.mixin.Shadow;
 @SuppressWarnings({ "SameParameterValue" })
 @Mixin(BufferBuilder.class)
 public abstract class MixinBufferBuilder extends FixedColorVertexConsumer {
+    //FIXME: @Shadow
+    // private boolean field_21594; // is baked quad format
+
     @Shadow
-    private boolean field_21594; // is baked quad format
+    private VertexFormat format;
+
+    @Shadow
+    private VertexFormat.DrawMode drawMode;
 
     @Override
     public void quad(MatrixStack.Entry matrices, BakedQuad quad, float[] brightnessTable, float r, float g, float b, int[] light, int overlay, boolean colorize) {
-        if (!this.field_21594) {
+
+        if (/*!this.field_21594*/ drawMode != VertexFormat.DrawMode.QUADS) {
             super.quad(matrices, quad, brightnessTable, r, g, b, light, overlay, colorize);
 
             return;

@@ -33,7 +33,7 @@ public abstract class MixinWorldRenderer {
 
     private SodiumWorldRenderer renderer;
 
-    @Redirect(method = "reload", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;viewDistance:I", ordinal = 1))
+    @Redirect(method = "reload()V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;viewDistance:I", ordinal = 1))
     private int nullifyBuiltChunkStorage(GameOptions options) {
         // Do not allow any resources to be allocated
         return 0;
@@ -78,12 +78,13 @@ public abstract class MixinWorldRenderer {
         this.renderer.scheduleTerrainUpdate();
     }
 
+    // FIXME: Possible incorrect handling
     /**
      * @reason Redirect the chunk layer render passes to our renderer
      * @author JellySquid
      */
     @Overwrite
-    private void renderLayer(RenderLayer renderLayer, MatrixStack matrixStack, double x, double y, double z) {
+    private void renderLayer(RenderLayer renderLayer, MatrixStack matrixStack, double x, double y, double z, Matrix4f matrix4f) {
         RenderDevice.enterManagedCode();
 
         try {
@@ -144,7 +145,7 @@ public abstract class MixinWorldRenderer {
         this.renderer.scheduleRebuildForChunk(x, y, z, important);
     }
 
-    @Inject(method = "reload", at = @At("RETURN"))
+    @Inject(method = "reload()V", at = @At("RETURN"))
     private void onReload(CallbackInfo ci) {
         RenderDevice.enterManagedCode();
 

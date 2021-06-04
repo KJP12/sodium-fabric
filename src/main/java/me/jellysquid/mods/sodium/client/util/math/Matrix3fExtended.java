@@ -1,8 +1,8 @@
 package me.jellysquid.mods.sodium.client.util.math;
 
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 
 public interface Matrix3fExtended {
     /**

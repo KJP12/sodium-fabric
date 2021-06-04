@@ -6,7 +6,6 @@ import me.jellysquid.mods.sodium.client.model.light.EntityLighter;
 import me.jellysquid.mods.sodium.client.render.entity.EntityLightSampler;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.PaintingEntityRenderer;
@@ -25,8 +24,8 @@ public abstract class MixinPaintingEntityRenderer extends EntityRenderer<Paintin
     private PaintingEntity entity;
     private float tickDelta;
 
-    protected MixinPaintingEntityRenderer(EntityRendererFactory.Context dispatcher) {
-        super(dispatcher);
+    protected MixinPaintingEntityRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx);
     }
 
     @Inject(method = "render", at = @At(value = "HEAD"))

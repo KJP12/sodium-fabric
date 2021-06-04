@@ -3,10 +3,12 @@ package me.jellysquid.mods.sodium.client.gui.options.control;
 import me.jellysquid.mods.sodium.client.gui.options.Option;
 import me.jellysquid.mods.sodium.client.gui.widgets.AbstractWidget;
 import me.jellysquid.mods.sodium.client.util.Dim2i;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Formatting;
 
-public class ControlElement<T> extends AbstractWidget {
+public class ControlElement<T> extends AbstractWidget implements Selectable {
     protected final Option<T> option;
 
     protected final Dim2i dim;
@@ -54,5 +56,15 @@ public class ControlElement<T> extends AbstractWidget {
 
     public Dim2i getDimensions() {
         return this.dim;
+    }
+
+    @Override
+    public SelectionType getType() {
+        return SelectionType.NONE;
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+
     }
 }

@@ -30,9 +30,9 @@ public class GameRendererContext {
 
         FloatBuffer bufModelViewProjection = memoryStack.mallocFloat(16);
 
-        Matrix4f matrix = RenderSystem.getProjectionMatrix().copy();
+        Matrix4f matrix = PROJECTION_MATRIX.copy();
         matrix.multiply(matrices.getModel());
-        matrix.write(bufModelViewProjection, false);
+        matrix.writeColumnMajor(bufModelViewProjection);
 
         return bufModelViewProjection;
     }

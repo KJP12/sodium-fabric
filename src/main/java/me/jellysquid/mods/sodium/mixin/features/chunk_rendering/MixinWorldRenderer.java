@@ -78,6 +78,7 @@ public abstract class MixinWorldRenderer {
         this.renderer.scheduleTerrainUpdate();
     }
 
+    // FIXME: Possible incorrect handling
     /**
      * @reason Redirect the chunk layer render passes to our renderer
      * @author JellySquid

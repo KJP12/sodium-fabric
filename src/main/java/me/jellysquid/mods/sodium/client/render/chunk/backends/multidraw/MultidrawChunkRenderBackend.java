@@ -230,7 +230,6 @@ public class MultidrawChunkRenderBackend extends ChunkRenderShaderBackend<Multid
     }
 
     private void setupUploadBatches(Iterator<ChunkBuildResult<MultidrawGraphicsState>> renders) {
-
         while (renders.hasNext()) {
             ChunkBuildResult<MultidrawGraphicsState> result = renders.next();
             ChunkRenderContainer<MultidrawGraphicsState> render = result.render;

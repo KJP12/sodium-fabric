@@ -26,13 +26,13 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.*;
 import net.minecraft.util.profiler.Profiler;
+import org.lwjgl.opengl.GL20C;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -73,8 +73,8 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
     }
 
     /**
-     * @throws IllegalStateException If the renderer has not yet been created
      * @return The current instance of this type
+     * @throws IllegalStateException If the renderer has not yet been created
      */
     public static SodiumWorldRenderer getInstance() {
         if (instance == null) {
@@ -231,6 +231,7 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
         renderLayer.endDrawing();
 
         RenderSystem.clear(256, true);
+        // RenderSystem.clearColor(-1F, -1F, -1F, -1F);
     }
 
     public void reload() {
@@ -363,7 +364,7 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
 
         // Entities outside the valid world height will never map to a rendered chunk
         // Always render these entities or they'll be culled incorrectly!
-        if (box.maxY < 0.5D || box.minY > 255.5D) {
+        if (box.maxY < this.world.getBottomY() + 0.5D || box.minY > this.world.getTopY() - 0.5D) {
             return true;
         }
 

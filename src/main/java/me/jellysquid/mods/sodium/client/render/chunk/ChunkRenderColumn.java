@@ -4,17 +4,15 @@ import me.jellysquid.mods.sodium.common.util.DirectionUtil;
 import net.minecraft.util.math.Direction;
 
 public class ChunkRenderColumn<T extends ChunkGraphicsState> {
-    @SuppressWarnings("unchecked")
-    private final ChunkRenderContainer<T>[] renders = new ChunkRenderContainer[16];
-
-    @SuppressWarnings("unchecked")
+    private final ChunkRenderContainer<T>[] renders;
     private final ChunkRenderColumn<T>[] adjacent = new ChunkRenderColumn[6];
 
     private final int x, z;
 
-    public ChunkRenderColumn(int x, int z) {
+    public ChunkRenderColumn(int x, int z, int sections) {
         this.x = x;
         this.z = z;
+        this.renders = new ChunkRenderContainer[sections];
 
         this.setAdjacentColumn(Direction.UP, this);
         this.setAdjacentColumn(Direction.DOWN, this);

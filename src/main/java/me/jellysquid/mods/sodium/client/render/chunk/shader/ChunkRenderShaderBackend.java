@@ -67,12 +67,15 @@ public abstract class ChunkRenderShaderBackend<T extends ChunkGraphicsState>
 
     @Override
     public void begin(MatrixStack matrixStack, Matrix4f matrix4f) {
+        /* */
         this.activeProgram = this.programs.get(LegacyFogHelper.getFogMode());
         this.activeProgram.bind();
-        //Shader shader = RenderSystem.getShader();
-        //BufferRenderer.unbindAll();
-        //GL43C.glBindAttribLocation(shader.getProgramRef(), ChunkShaderBindingPoints.MODEL_OFFSET.getGenericAttributeIndex(), "d_ModelOffset");
-        /*for(int k = 0; k < 12; ++k) {
+        this.activeProgram.setup(matrixStack, this.vertexType.getModelScale(), this.vertexType.getTextureScale());
+        /* *
+        Shader shader = RenderSystem.getShader();
+        BufferRenderer.unbindAll();
+        GL43C.glBindAttribLocation(shader.getProgramRef(), ChunkShaderBindingPoints.MODEL_OFFSET.getGenericAttributeIndex(), "d_ModelOffset");
+        for(int k = 0; k < 12; ++k) {
             int l = RenderSystem.getShaderTexture(k);
             shader.addSampler("Sampler" + k, l);
         }
@@ -109,14 +112,15 @@ public abstract class ChunkRenderShaderBackend<T extends ChunkGraphicsState>
             shader.gameTime.set(RenderSystem.getShaderGameTime());
         }
 
-        RenderSystem.setupShaderLights(shader);*/
-        //shader.upload();
-        //shader.bind();
-        this.activeProgram.setup(matrixStack, this.vertexType.getModelScale(), this.vertexType.getTextureScale());
+        RenderSystem.setupShaderLights(shader);
+        shader.upload();
+        /* */
     }
 
     @Override
     public void end(MatrixStack matrixStack) {
+        // RenderSystem.getShader().bind(); // unbind?
+
         this.activeProgram.unbind();
         this.activeProgram = null;
     }

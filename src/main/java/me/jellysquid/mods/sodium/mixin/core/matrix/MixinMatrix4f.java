@@ -357,16 +357,16 @@ public class MixinMatrix4f implements Matrix4fExtended {
     }
 
     private void writeRowMajorToBufferSafe(FloatBuffer buf) {
-        buf.put(0, this.a00);
-        buf.put(1, this.a10);
-        buf.put(2, this.a20);
-        buf.put(3, this.a30);
-        buf.put(4, this.a01);
-        buf.put(5, this.a11);
-        buf.put(6, this.a21);
-        buf.put(7, this.a31);
-        buf.put(8, this.a02);
-        buf.put(9, this.a12);
+        buf.put(0 , this.a00);
+        buf.put(1 , this.a10);
+        buf.put(2 , this.a20);
+        buf.put(3 , this.a30);
+        buf.put(4 , this.a01);
+        buf.put(5 , this.a11);
+        buf.put(6 , this.a21);
+        buf.put(7 , this.a31);
+        buf.put(8 , this.a02);
+        buf.put(9 , this.a12);
         buf.put(10, this.a22);
         buf.put(11, this.a32);
         buf.put(12, this.a03);

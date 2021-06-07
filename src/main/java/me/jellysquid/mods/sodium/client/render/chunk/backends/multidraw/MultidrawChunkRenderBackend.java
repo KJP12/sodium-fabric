@@ -33,11 +33,13 @@ import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkRenderShaderBac
 import me.jellysquid.mods.sodium.client.render.chunk.shader.ChunkShaderBindingPoints;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 import org.lwjgl.opengl.GL20C;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -357,8 +359,8 @@ public class MultidrawChunkRenderBackend extends ChunkRenderShaderBackend<Multid
      */
     @Deprecated
     private static boolean isWindowsIntelDriver() {
-        return false;
-        /*
+        // return false;
+
         // We only care about Windows
         // The open-source drivers on Linux are not known to have driver bugs with indirect command buffers
         if (Util.getOperatingSystem() != Util.OperatingSystem.WINDOWS) {
@@ -367,7 +369,6 @@ public class MultidrawChunkRenderBackend extends ChunkRenderShaderBackend<Multid
 
         // Check to see if the GPU vendor is Intel
         return Objects.equals(GL20C.glGetString(GL20C.GL_VENDOR), INTEL_VENDOR_NAME);
-         */
     }
 
     /**
@@ -376,9 +377,14 @@ public class MultidrawChunkRenderBackend extends ChunkRenderShaderBackend<Multid
      * renderer.
      */
     private static boolean isKnownBrokenIntelDriver() {
-        if (!isWindowsIntelDriver()) {
-            return false;
+        // Unfortunately, Intel on Core OpenGL 3 is very much broken with Multidraw,
+        // an explicit blacklist will have to do until a proper patch can be made.
+        if(isWindowsIntelDriver()) {
+            return true;
         }
+        // if (!isWindowsIntelDriver()) {
+        //     return false;
+        // }
 
         String version = GL20C.glGetString(GL20C.GL_VERSION);
 
